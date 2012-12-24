@@ -91,7 +91,7 @@
   },
   'conditions': [
     ['OS=="linux" or OS=="freebsd" or OS=="openbsd" or OS=="solaris" \
-       or OS=="netbsd"', {
+       or OS=="netbsd" or OS=="haiku"', {
       'target_defaults': {
         'cflags': [ '-Wall', '<(werror)', '-W', '-Wno-unused-parameter',
                     '-Wnon-virtual-dtor', '-pthread', '-fno-rtti',
@@ -100,6 +100,10 @@
         'conditions': [
           [ 'OS=="linux"', {
             'cflags': [ '-ansi' ],
+          }],
+          [ 'OS=="haiku"', {
+            'cflags!': [ '-pthread' ],
+            'ldflags!': [ '-pthread' ],
           }],
           [ 'visibility=="hidden" and v8_enable_backtrace==0', {
             'cflags': [ '-fvisibility=hidden' ],

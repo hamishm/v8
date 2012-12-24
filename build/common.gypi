@@ -283,7 +283,7 @@
         },
       }],
       ['OS=="linux" or OS=="freebsd" or OS=="openbsd" or OS=="solaris" \
-         or OS=="netbsd"', {
+         or OS=="netbsd" or OS=="haiku"', {
         'conditions': [
           [ 'v8_no_strict_aliasing==1', {
             'cflags': [ '-fno-strict-aliasing' ],
@@ -294,7 +294,7 @@
         'defines': [ '__C99FEATURES__=1' ],  # isinf() etc.
       }],
       ['(OS=="linux" or OS=="freebsd" or OS=="openbsd" or OS=="solaris" \
-         or OS=="netbsd" or OS=="mac" or OS=="android") and \
+         or OS=="netbsd" or OS=="mac" or OS=="android" or OS=="haiku") and \
         (v8_target_arch=="arm" or v8_target_arch=="ia32" or \
          v8_target_arch=="mipsel")', {
         # Check whether the host compiler and target compiler support the
@@ -366,7 +366,8 @@
           ['v8_enable_extra_checks==1', {
             'defines': ['ENABLE_EXTRA_CHECKS',],
           }],
-          ['OS=="linux" or OS=="freebsd" or OS=="openbsd" or OS=="netbsd"', {
+          ['OS=="linux" or OS=="freebsd" or OS=="openbsd" or OS=="netbsd" \
+            or OS=="haiku"', {
             'cflags': [ '-Wall', '<(werror)', '-W', '-Wno-unused-parameter',
                         '-Wnon-virtual-dtor', '-Woverloaded-virtual' ],
           }],
@@ -404,7 +405,7 @@
             'defines': ['ENABLE_EXTRA_CHECKS',],
           }],
           ['OS=="linux" or OS=="freebsd" or OS=="openbsd" or OS=="netbsd" \
-            or OS=="android"', {
+            or OS=="android" or OS=="haiku"', {
             'cflags!': [
               '-O2',
               '-Os',

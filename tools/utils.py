@@ -63,6 +63,8 @@ def GuessOS():
     return 'solaris'
   elif id == 'NetBSD':
     return 'netbsd'
+  elif id == 'Haiku':
+    return 'haiku'
   else:
     return None
 
@@ -82,6 +84,8 @@ def GuessArchitecture():
   elif id == 'x86_64':
     return 'ia32'
   elif id == 'amd64':
+    return 'ia32'
+  elif id == 'BePC':
     return 'ia32'
   else:
     return None

@@ -744,6 +744,17 @@
                 'libraries': [ '-lwinmm.lib', '-lws2_32.lib' ],
               },
             }],
+            ['OS=="haiku"', {
+                'link_settings': {
+                  'libraries': [
+                    '-lnetwork',
+                ]},
+                'sources': [
+                  '../../src/platform-haiku.cc',
+                  '../../src/platform-posix.cc',
+                ],
+              }
+            ],
             ['component=="shared_library"', {
               'defines': [
                 'BUILDING_V8_SHARED',
