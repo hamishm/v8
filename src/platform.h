@@ -96,6 +96,10 @@ int random();
 
 #endif  // WIN32
 
+#ifdef __HAIKU__
+#define isless(x, y) __builtin_isless(x, y)
+#endif // __HAIKU__
+
 #include "atomicops.h"
 #include "lazy-instance.h"
 #include "platform-tls.h"
@@ -107,7 +111,7 @@ namespace internal {
 
 // Use AtomicWord for a machine-sized pointer. It is assumed that
 // reads and writes of naturally aligned values of this type are atomic.
-#if defined(__OpenBSD__) && defined(__i386__)
+#if (defined(__OpenBSD__) || defined(__HAIKU__)) && defined(__i386__)
 typedef Atomic32 AtomicWord;
 #else
 typedef intptr_t AtomicWord;

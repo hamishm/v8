@@ -178,7 +178,12 @@ typedef byte* Address;
 #endif
 #else  // V8_HOST_ARCH_64_BIT
 #define V8_INTPTR_C(x)  (x)
+#if defined(__HAIKU__)
+// (u)intptr_t is long on Haiku
+#define V8_PTR_PREFIX "l"
+#else
 #define V8_PTR_PREFIX ""
+#endif
 #endif  // V8_HOST_ARCH_64_BIT
 
 // The following macro works on both 32 and 64-bit platforms.
