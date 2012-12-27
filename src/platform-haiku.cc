@@ -281,6 +281,18 @@ int OS::StackWalk(Vector<OS::StackFrame> frames) {
   return 0;
 }
 
+
+static void* getMmapAddr() {
+  // Usually this uses OS::GetRandomMmapAddr() which for POSIX systems
+  // returns a random address in the range 0x2000000-0x6000000. Haiku's
+  // mmap only searches for a free address greater than or equal to the
+  // hint, so the <0x2000000 region remains unfilled and V8 runs out of
+  // virtual address space prematurely.
+  // So instead we just let mmap choose the address.
+  return 0;
+}
+
+
 // No MAP_NORESERVE means we always commit our mmapped areas
 #define MAP_NORESERVE 0
 
@@ -301,7 +313,7 @@ VirtualMemory::VirtualMemory(size_t size, size_t alignment)
   ASSERT(IsAligned(alignment, static_cast<intptr_t>(OS::AllocateAlignment())));
   size_t request_size = RoundUp(size + alignment,
                                 static_cast<intptr_t>(OS::AllocateAlignment()));
-  void* reservation = mmap(OS::GetRandomMmapAddr(),
+  void* reservation = mmap(getMmapAddr(),
                            request_size,
                            PROT_NONE,
                            MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE,
@@ -373,13 +385,12 @@ bool VirtualMemory::Guard(void* address) {
 
 
 void* VirtualMemory::ReserveRegion(size_t size) {
-  void* result = mmap(OS::GetRandomMmapAddr(),
+  void* result = mmap(getMmapAddr(),
                       size,
                       PROT_NONE,
                       MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE,
                       kMmapFd,
                       kMmapFdOffset);
-
   if (result == MAP_FAILED) return NULL;
 
   return result;
@@ -752,7 +763,7 @@ class SignalSender : public Thread {
 #ifdef DEBUG
     if (result != 0 && errno != EINTR) {
       fprintf(stderr,
-              "SignalSender usleep error; interval = %u, errno = %d\n",
+              "SignalSender usleep error; interval = %lu, errno = %d\n",
               interval,
               errno);
       ASSERT(result == 0 || errno == EINTR);
